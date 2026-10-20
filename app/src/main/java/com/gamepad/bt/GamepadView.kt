@@ -55,13 +55,13 @@ class GamepadView(context: Context, private val pad: GamepadHid) : View(context)
         val wf = w.toFloat()
         val hf = h.toFloat()
         r = hf * 0.17f
-        lsx = wf * 0.13f
-        lsy = hf * 0.42f
+        lsx = wf * 0.30f
+        lsy = hf * 0.72f
         rsx = wf * 0.70f
         rsy = hf * 0.72f
-        dpx = wf * 0.30f
-        dpy = hf * 0.76f
-        dpr = hf * 0.15f
+        dpx = wf * 0.13f
+        dpy = hf * 0.42f
+        dpr = hf * 0.165f
         txt.textSize = hf * 0.05f
 
         btns.clear()
