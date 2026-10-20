@@ -27,11 +27,11 @@ class GamepadHid(
         const val BTN_R3 = 14
 
         private val DESCRIPTOR: ByteArray = intArrayOf(
-            0x05, 0x01, 0x09, 0x05, 0xA1, 0x01, 0x85, 0x01,
+            0x05, 0x01, 0x09, 0x05, 0xA1, 0x01,
             0x05, 0x09, 0x19, 0x01, 0x29, 0x10,
             0x15, 0x00, 0x25, 0x01, 0x75, 0x01, 0x95, 0x10, 0x81, 0x02,
             0x05, 0x01, 0x09, 0x39,
-            0x15, 0x01, 0x25, 0x08, 0x35, 0x00, 0x46, 0x3B, 0x01,
+            0x15, 0x00, 0x25, 0x07, 0x35, 0x00, 0x46, 0x3B, 0x01,
             0x65, 0x14, 0x75, 0x04, 0x95, 0x01, 0x81, 0x42,
             0x65, 0x00, 0x75, 0x04, 0x95, 0x01, 0x81, 0x03,
             0x05, 0x01, 0x09, 0x30, 0x09, 0x31, 0x09, 0x32, 0x09, 0x35,
@@ -75,7 +75,7 @@ class GamepadHid(
                     hid = h
                     val sdp = BluetoothHidDeviceAppSdpSettings(
                         "GamepadBT", "Gamepad", "GamepadBT",
-                        BluetoothHidDevice.SUBCLASS1_COMBO, DESCRIPTOR
+                        0x08.toByte(), DESCRIPTOR
                     )
                     h.registerApp(sdp, null, null, executor, callback)
                 }
@@ -96,13 +96,14 @@ class GamepadHid(
 
     fun send(buttons: Int, hat: Int, lx: Int, ly: Int, rx: Int, ry: Int) {
         val d = host ?: return
+        val h = if (hat == 0) 8 else hat - 1
         val r = byteArrayOf(
             (buttons and 0xFF).toByte(),
             ((buttons shr 8) and 0xFF).toByte(),
-            hat.toByte(),
+            h.toByte(),
             lx.toByte(), ly.toByte(), rx.toByte(), ry.toByte()
         )
-        hid?.sendReport(d, 1, r)
+        hid?.sendReport(d, 0, r)
     }
 
     fun tap(bit: Int) {
